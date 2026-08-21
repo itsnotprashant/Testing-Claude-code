@@ -18,13 +18,19 @@
   --blood-hot:#ff2b2b;      /* rgb(255,43,43) */
   --blood-deep:#78060c;     /* rgb(120,6,12) */
 
-  /* bone — text ramp. Reading text stays >= 4.5:1 on --void.
-     --tx-faint is decorative only: never the sole carrier of meaning. */
+  /* bone — text ramp, measured against --void (#050406):
+       --tx-hi   .94 -> 14.2:1   --tx    .74 -> 8.8:1
+       --tx-lo   .58 ->  5.6:1   --tx-faint .56 -> 5.3:1
+     All four clear 4.5:1, so any of them may carry meaning.
+       --tx-deco .34 -> 2.6:1  FAILS on purpose. Permitted ONLY inside
+     aria-hidden chrome (side rails, act tag, frame counter), which is
+     hidden from the accessibility tree and duplicates nothing. */
   --bone:232,228,220;
   --tx-hi:rgba(var(--bone),.94);
   --tx:rgba(var(--bone),.74);
   --tx-lo:rgba(var(--bone),.58);
-  --tx-faint:rgba(var(--bone),.34);
+  --tx-faint:rgba(var(--bone),.56);
+  --tx-deco:rgba(var(--bone),.34);
   --hair:rgba(var(--bone),.10);
   --hair-soft:rgba(var(--bone),.06);
 
@@ -59,6 +65,7 @@ body{
   margin:0;background:var(--void);color:var(--tx);
   font-family:var(--serif);font-size:16px;line-height:1.5;
   -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  touch-action:manipulation;   /* drop the 300ms tap delay */
 }
 img,svg{display:block;max-width:100%}
 h1,h2,p,blockquote,figure{margin:0}
@@ -67,6 +74,10 @@ a{color:inherit;text-decoration:none}
 
 /* Visible focus everywhere — 2px perimeter, 3:1 state contrast (WCAG 2.2) */
 :focus-visible{outline:2px solid var(--blood-hot);outline-offset:3px;border-radius:2px}
+/* the fixed header must never sit on top of whatever has keyboard focus */
+:where(a,button,section,[id]){scroll-margin-top:7.5rem}
+/* press feedback for touch, where :hover never fires */
+.cat:active,.nav a:active,.nav__audio:active,.cards__close:active{opacity:.6}
 
 ::selection{background:var(--blood);color:#fff}
 
@@ -158,6 +169,11 @@ a{color:inherit;text-decoration:none}
   display:flex;align-items:flex-start;justify-content:space-between;
   padding:clamp(1.1rem,3vh,2rem) clamp(1.1rem,4vw,3rem);
 }
+/* content scrolls beneath the fixed bar — a scrim keeps both legible */
+.hud::before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(3,2,4,.92) 0%,rgba(3,2,4,.72) 55%,transparent 100%);
+}
 .brand{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem .7rem}
 .brand__mark{
   width:12px;height:12px;border-radius:50% 0 50% 50%;
@@ -166,24 +182,24 @@ a{color:inherit;text-decoration:none}
 .brand__name{font-family:var(--display);font-weight:700;font-size:.82rem;letter-spacing:.42em;color:var(--tx-hi)}
 .brand__sub{
   width:100%;padding-left:1.2rem;font-family:var(--mono);font-weight:300;
-  font-size:.5rem;letter-spacing:.3em;color:var(--tx-faint);
+  font-size:.72rem;letter-spacing:.26em;color:var(--tx-faint);
 }
 .nav{display:flex;align-items:center;gap:clamp(1rem,2.6vw,2.2rem)}
 .nav a,.nav__audio{
-  font-family:var(--display);font-weight:600;font-size:.66rem;letter-spacing:.34em;
+  font-family:var(--display);font-weight:600;font-size:.78rem;letter-spacing:.32em;
   color:var(--tx-lo);transition:color var(--ui) var(--ease);
   /* 44×44 min target without visually inflating the label */
   padding:.9rem .2rem;
 }
 .nav a:hover,.nav__audio:hover{color:var(--blood-hot)}
 .nav__audio{font-family:var(--serif);letter-spacing:.2em;display:flex;gap:.4rem;align-items:center}
-.nav__audio span{font-family:var(--mono);font-size:.58rem}
+.nav__audio span{font-family:var(--mono);font-size:.74rem}
 .nav__audio[aria-pressed="true"]{color:var(--blood-hot)}
 
-.rail{
+.rail{                                   /* aria-hidden chrome */
   position:fixed;z-index:50;pointer-events:none;
   font-family:var(--mono);font-weight:300;font-size:.52rem;letter-spacing:.34em;
-  color:var(--tx-faint);writing-mode:vertical-rl;
+  color:var(--tx-deco);writing-mode:vertical-rl;
 }
 .rail--left{left:clamp(.6rem,2vw,1.6rem);top:50%;transform:translateY(-50%)}
 .rail--right{
@@ -200,11 +216,11 @@ a{color:inherit;text-decoration:none}
 }
 .tag.is-hidden{opacity:0}
 .tag b{display:block;font-family:var(--serif);font-weight:800;font-size:.72rem;letter-spacing:.24em;color:var(--blood-hot)}
-.tag em{font-family:var(--mono);font-style:normal;font-size:.5rem;letter-spacing:.3em;color:var(--tx-faint)}
+.tag em{font-family:var(--mono);font-style:normal;font-size:.5rem;letter-spacing:.3em;color:var(--tx-deco)}
 .frameCount{
   position:fixed;left:clamp(1.2rem,4vw,3rem);bottom:clamp(1.2rem,4vh,2.4rem);z-index:50;
   font-family:var(--mono);font-weight:300;font-size:.52rem;letter-spacing:.3em;
-  color:var(--tx-faint);pointer-events:none;opacity:0;transition:opacity .45s var(--ease);
+  color:var(--tx-deco);pointer-events:none;opacity:0;transition:opacity .45s var(--ease);
 }
 .frameCount.is-on{opacity:1}
 
@@ -232,13 +248,13 @@ main{position:relative;z-index:10}
 }
 .hero__ro{
   margin-top:1.4rem;font-family:var(--display);font-weight:600;
-  font-size:.68rem;letter-spacing:.62em;color:var(--tx-lo);text-indent:.62em;
+  font-size:.82rem;letter-spacing:.56em;color:var(--tx-lo);text-indent:.56em;
 }
 .hero__cue{display:grid;justify-items:center;gap:.8rem}
 .hero__cue-jp{font-family:var(--serif);font-size:.78rem;letter-spacing:.4em;color:var(--tx-lo)}
 .hero__cue-line{width:1px;height:52px;background:linear-gradient(var(--blood-hot),transparent);animation:drop 2.4s var(--ease) infinite}
 @keyframes drop{0%,100%{opacity:.25;transform:scaleY(.5)}50%{opacity:1;transform:scaleY(1)}}
-.hero__cue-ro{font-family:var(--mono);font-weight:300;font-size:.52rem;letter-spacing:.34em;color:var(--tx-faint)}
+.hero__cue-ro{font-family:var(--mono);font-weight:300;font-size:.74rem;letter-spacing:.28em;color:var(--tx-faint)}
 
 /* ─────────────── ACTS II / III — PANEL ─────────────── */
 .act--panel{justify-items:start}
@@ -249,9 +265,10 @@ main{position:relative;z-index:10}
   text-shadow:0 0 70px rgba(0,0,0,.9);
 }
 .panel__jp--stack{line-height:.86}
+/* --blood is 3.26:1 — too low for small text, so labels use --blood-hot (5.5:1) */
 .panel__ro{
   margin-top:.9rem;font-family:var(--display);font-weight:700;
-  font-size:.64rem;letter-spacing:.5em;color:var(--blood);text-indent:.5em;
+  font-size:.8rem;letter-spacing:.44em;color:var(--blood-hot);text-indent:.44em;
 }
 .panel__quote{margin-top:2rem;font-size:.92rem;line-height:2;color:var(--tx)}
 .panel__txt{margin-top:.9rem;font-family:var(--display);font-size:1rem;line-height:1.9;color:var(--tx-lo)}
@@ -293,11 +310,11 @@ main{position:relative;z-index:10}
 .eyes__lead span{font-family:var(--display);font-style:italic;color:var(--tx-lo)}
 .eyes__meta{
   margin-top:.7rem;font-family:var(--mono);font-weight:300;
-  font-size:.54rem;letter-spacing:.28em;color:var(--tx-faint);
+  font-size:.74rem;letter-spacing:.24em;color:var(--tx-faint);
 }
 .eyes__hint{
   margin-top:clamp(1.6rem,5vh,3rem);
-  font-family:var(--mono);font-weight:300;font-size:.56rem;letter-spacing:.34em;color:var(--tx-lo);
+  font-family:var(--mono);font-weight:300;font-size:.76rem;letter-spacing:.28em;color:var(--tx-lo);
 }
 
 /* ─────────────── ACT VI — 其の眼に宿る術 ─────────────── */
@@ -325,22 +342,23 @@ main{position:relative;z-index:10}
   filter:blur(1px);animation:breathe 9s var(--ease) infinite;
 }
 @keyframes breathe{0%,100%{opacity:.72}50%{opacity:1}}
-.jutsu__inner{position:relative;z-index:2;max-width:52ch}
+.jutsu__inner{position:relative;z-index:2;max-width:62ch}
 .jutsu__jp{
   font-family:var(--serif);font-weight:800;line-height:1.06;
   font-size:clamp(2.2rem,6.4vw,4.6rem);letter-spacing:.05em;color:var(--tx-hi);
 }
 .jutsu__txt{
-  margin-top:1.8rem;max-width:46ch;
+  margin-top:1.8rem;max-width:48ch;
   font-family:var(--display);font-size:1.02rem;line-height:2;color:var(--tx);
 }
-.jutsu__cats{display:flex;flex-wrap:wrap;gap:clamp(1.4rem,4vw,3.4rem);margin-top:2.6rem}
+.jutsu__cats{display:grid;grid-template-columns:repeat(3,auto);justify-content:start;
+  gap:clamp(1rem,2.4vw,2.2rem);margin-top:2.6rem}
 .cat{
   display:grid;gap:.45rem;text-align:left;padding:.6rem .2rem;
   transition:transform var(--ui) var(--ease);
 }
 .cat b{font-family:var(--serif);font-weight:800;font-size:1.02rem;letter-spacing:.1em;color:var(--tx-hi);transition:color var(--ui) var(--ease)}
-.cat em{font-family:var(--mono);font-style:normal;font-size:.5rem;letter-spacing:.3em;color:var(--tx-faint);transition:color var(--ui) var(--ease)}
+.cat em{font-family:var(--mono);font-style:normal;font-size:.72rem;letter-spacing:.24em;color:var(--tx-faint);transition:color var(--ui) var(--ease)}
 .cat::after{content:"";height:1px;background:var(--hair);transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease),background .35s var(--ease)}
 .cat:hover b,.cat.is-open b{color:var(--blood-hot)}
 .cat:hover em,.cat.is-open em{color:var(--tx-lo)}
@@ -352,7 +370,7 @@ main{position:relative;z-index:10}
   margin-top:clamp(3rem,7vh,5rem);padding-top:1.6rem;border-top:1px solid var(--hair-soft);
 }
 .jutsu__foot span:first-child{font-family:var(--serif);font-size:.86rem;letter-spacing:.2em;color:var(--tx-lo)}
-.jutsu__foot span:last-child{font-family:var(--mono);font-size:.54rem;letter-spacing:.28em;color:var(--tx-faint);align-self:flex-end}
+.jutsu__foot span:last-child{font-family:var(--mono);font-size:.74rem;letter-spacing:.24em;color:var(--tx-faint);align-self:flex-end}
 
 /* 天照 — bottom right anchor */
 .jutsu__amaterasu{
@@ -360,7 +378,7 @@ main{position:relative;z-index:10}
   z-index:3;pointer-events:none;text-align:right;
   display:flex;flex-direction:column;align-items:flex-end;gap:.5rem;
 }
-.jutsu__amaterasu-sub{font-family:var(--serif);font-size:.5rem;letter-spacing:.3em;color:var(--tx-faint)}
+.jutsu__amaterasu-sub{font-family:var(--serif);font-size:.5rem;letter-spacing:.3em;color:var(--tx-deco)}
 .jutsu__amaterasu-jp{
   font-family:var(--serif);font-weight:800;line-height:.86;
   font-size:clamp(3.4rem,11vw,9rem);letter-spacing:.06em;color:transparent;
@@ -395,7 +413,7 @@ main{position:relative;z-index:10}
 }
 .act--quote cite{
   display:block;margin-top:2.2rem;font-family:var(--mono);font-style:normal;
-  font-size:.54rem;letter-spacing:.34em;color:var(--tx-faint);
+  font-size:.74rem;letter-spacing:.28em;color:var(--tx-faint);
 }
 
 /* ─────────────── ACT VIII — END ─────────────── */
@@ -406,15 +424,15 @@ main{position:relative;z-index:10}
 .end__inner{display:grid;gap:1.2rem;width:min(100%,52ch)}
 .end__jp{
   font-family:var(--serif);font-weight:800;font-size:clamp(4rem,14vw,10rem);
-  color:transparent;background:linear-gradient(180deg,rgba(var(--bone),.9),rgba(var(--bone),.18));
+  color:transparent;background:linear-gradient(180deg,rgba(var(--bone),.95),rgba(var(--bone),.5));
   -webkit-background-clip:text;background-clip:text;line-height:1;
 }
 .end__line{font-size:1rem;letter-spacing:.3em;color:var(--tx)}
-.end__ro{font-family:var(--display);font-weight:600;font-size:.6rem;letter-spacing:.5em;color:var(--tx-faint)}
+.end__ro{font-family:var(--display);font-weight:600;font-size:.8rem;letter-spacing:.42em;color:var(--tx-faint)}
 .end__foot{
   display:flex;flex-wrap:wrap;justify-content:space-between;gap:1rem;
   margin-top:clamp(3rem,10vh,6rem);padding-top:1.4rem;border-top:1px solid var(--hair-soft);
-  font-family:var(--mono);font-size:.5rem;letter-spacing:.26em;color:var(--tx-faint);
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;color:var(--tx-faint);
 }
 .end__foot code{font-family:var(--mono);color:var(--tx-lo)}
 
@@ -437,7 +455,7 @@ main{position:relative;z-index:10}
 .cards__close:hover{border-color:var(--blood-hot);color:var(--blood-hot);background:rgba(255,43,43,.08)}
 .cards__head{text-align:center;margin-bottom:clamp(2.4rem,6vh,4rem)}
 .cards__jp{font-family:var(--serif);font-weight:800;font-size:clamp(1.8rem,5vw,3rem);letter-spacing:.12em;color:var(--tx-hi)}
-.cards__ro{margin-top:.7rem;font-family:var(--display);font-weight:700;font-size:.6rem;letter-spacing:.5em;color:var(--blood)}
+.cards__ro{margin-top:.7rem;font-family:var(--display);font-weight:700;font-size:.8rem;letter-spacing:.42em;color:var(--blood-hot)}
 .cards__grid{
   display:grid;gap:clamp(1rem,2vw,1.6rem);
   grid-template-columns:repeat(auto-fit,minmax(min(100%,272px),1fr));
@@ -457,7 +475,7 @@ main{position:relative;z-index:10}
 .card:hover{background:var(--char);border-color:rgba(255,43,43,.28);transform:translateY(-4px)}
 .card:hover::after{opacity:1}
 .card>*{position:relative;z-index:2}
-.card__num{font-family:var(--mono);font-size:.58rem;letter-spacing:.34em;color:var(--tx-lo)}
+.card__num{font-family:var(--mono);font-size:.74rem;letter-spacing:.28em;color:var(--tx-lo)}
 .card__jp{
   font-family:var(--serif);font-weight:800;
   font-size:clamp(2rem,3.4vw,2.9rem);letter-spacing:.08em;
@@ -465,11 +483,11 @@ main{position:relative;z-index:10}
   transition:color .45s var(--ease),text-shadow .45s var(--ease);
 }
 .card:hover .card__jp{color:var(--blood-hot);text-shadow:0 0 34px rgba(255,43,43,.5)}
-.card__ro{font-family:var(--display);font-weight:700;font-size:.64rem;letter-spacing:.4em;color:var(--tx-lo);margin-bottom:1.2rem}
-.card__txt{font-family:var(--serif);font-size:.86rem;line-height:2;color:var(--tx)}
+.card__ro{font-family:var(--display);font-weight:700;font-size:.8rem;letter-spacing:.34em;color:var(--tx-lo);margin-bottom:1.2rem}
+.card__txt{font-family:var(--serif);font-size:.92rem;line-height:1.95;color:var(--tx)}
 .card__foot{
   margin-top:1.4rem;padding-top:1rem;border-top:1px solid var(--hair);
-  font-family:var(--mono);font-size:.52rem;letter-spacing:.28em;color:var(--tx-faint);
+  font-family:var(--mono);font-size:.74rem;letter-spacing:.24em;color:var(--tx-faint);
 }
 
 /* ─────────────── RESPONSIVE — 375 / 768 / 1024 / 1440 ─────────────── */
@@ -485,12 +503,14 @@ main{position:relative;z-index:10}
   .rail__bar{height:64px}
   .act--hero{min-height:104vh}
   .eyes__type{margin-top:34vh}
+  .jutsu__cats{grid-template-columns:1fr 1fr;gap:1.2rem}
   .jutsu__amaterasu{position:static;align-items:flex-start;text-align:left;margin-top:3rem}
   .jutsu__inner{max-width:none}
 }
 @media (max-width:420px){
   .nav a,.nav__audio{font-size:.58rem;letter-spacing:.22em}
   .tag,.frameCount{font-size:.46rem}
+  .jutsu__cats{grid-template-columns:1fr}
   .cards__grid{grid-template-columns:1fr}
 }
 

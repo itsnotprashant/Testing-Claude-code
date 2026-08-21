@@ -65,9 +65,13 @@ which is rated **high accessibility risk** — so every effect has a fallback:
   already open, no scroll-scrub, no parallax, no gaze tracking, no grain, no
   custom cursor.
 - A **skip link** jumps past the scroll acts.
-- Reading text stays at **4.5:1 or better** on the near-black background. The
-  faintest tier (`--tx-faint`) is decorative only and never the sole carrier of
-  meaning.
+- **Audited, not assumed.** A scripted pass measured every text node's computed
+  contrast, every target size, and heading order. It found 12 contrast failures
+  (a `.34` alpha tier at 2.56:1 carrying real copy like "SCROLL TO OPEN HIS EYES")
+  and micro-type down at 8px. Both are fixed: the text ramp now bottoms out at
+  5.3:1, meaningful copy is >=11.5px, and a separate `--tx-deco` tier holds the
+  failing alpha — used **only** inside `aria-hidden` chrome. Gradient-clipped
+  headings were verified by sampling painted pixels (4.9:1 at their palest).
 - The card overlay is a real `role="dialog"`: focus moves in, is trapped, Escape
   closes it, and focus returns to the button that opened it.
 - Visible focus rings everywhere (2px, `--blood-hot`). Nothing is hover-only.
