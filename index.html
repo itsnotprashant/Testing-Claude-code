@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>うちはイタチ — UCHIHA ITACHI</title>
+<meta name="description" content="A scroll-driven tribute to Uchiha Itachi. Scroll to open his eyes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@400;700;800&family=Cormorant+Garamond:wght@400;600;700&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Parallax storytelling needs an escape hatch — skip straight past the scroll acts -->
+<a class="skip" href="#jutsu">SKIP THE INTRO</a>
+
+<div class="grain" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true">
+  <span class="cursor__ring"></span>
+  <span class="cursor__dot"></span>
+</div>
+
+<!-- ═══════════════════ THE STAGE — fixed portrait behind acts I–V ═══════════════════
+     PLACEHOLDER ART. This whole <svg> is meant to be replaced by a real
+     illustration; see assets/README.md for the swap instructions.        -->
+<div class="stage" aria-hidden="true">
+  <div class="stage__storm"></div>
+  <div class="stage__figure">
+    <svg class="portrait" viewBox="0 0 800 980" preserveAspectRatio="xMidYMid slice" role="img">
+      <defs>
+        <!-- userSpaceOnUse so face and eyelid sample the SAME gradient and
+             meet without a seam — objectBoundingBox would remap per element -->
+        <radialGradient id="skin" gradientUnits="userSpaceOnUse" cx="400" cy="336" r="340">
+          <stop offset="0%"   stop-color="#f3edeb"/>
+          <stop offset="56%"  stop-color="#d2c9cd"/>
+          <stop offset="100%" stop-color="#877d8c"/>
+        </radialGradient>
+        <linearGradient id="hair" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1e2442"/><stop offset="52%" stop-color="#131728"/>
+          <stop offset="100%" stop-color="#070910"/>
+        </linearGradient>
+        <linearGradient id="cloak" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#232634"/><stop offset="100%" stop-color="#090a10"/>
+        </linearGradient>
+        <linearGradient id="shade" gradientUnits="userSpaceOnUse" x1="0" y1="258" x2="0" y2="352">
+          <stop offset="0%"   stop-color="#3f3950" stop-opacity="0"/>
+          <stop offset="35%"  stop-color="#3f3950" stop-opacity=".42"/>
+          <stop offset="100%" stop-color="#3f3950" stop-opacity="0"/>
+        </linearGradient>
+        <!-- form shading so the face is not one flat pale mass -->
+        <radialGradient id="cheek" gradientUnits="userSpaceOnUse" cx="400" cy="452" r="200">
+          <stop offset="0%" stop-color="#c0121f" stop-opacity=".10"/>
+          <stop offset="100%" stop-color="#c0121f" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="jaw" gradientUnits="userSpaceOnUse" x1="260" y1="0" x2="540" y2="0">
+          <stop offset="0%"   stop-color="#4a4257" stop-opacity=".45"/>
+          <stop offset="26%"  stop-color="#4a4257" stop-opacity="0"/>
+          <stop offset="74%"  stop-color="#4a4257" stop-opacity="0"/>
+          <stop offset="100%" stop-color="#4a4257" stop-opacity=".45"/>
+        </linearGradient>
+      </defs>
+
+      <!-- shoulders / akatsuki collar -->
+      <path d="M96 980 Q128 806 318 764 L400 812 L482 764 Q672 806 704 980 Z" fill="url(#cloak)"/>
+      <path d="M318 764 L400 824 L482 764 L458 744 L400 780 L342 744 Z" fill="#ded8d2" opacity=".16"/>
+
+      <!-- hair — one continuous mass, side locks included -->
+      <path d="M400 104 Q206 104 180 340 Q166 520 196 700 Q214 760 236 800
+               Q222 640 250 520 Q214 400 250 312 Q300 196 400 196
+               Q500 196 550 312 Q586 400 550 520 Q578 640 564 800
+               Q586 760 604 700 Q634 520 620 340 Q594 104 400 104Z" fill="url(#hair)"/>
+
+      <!-- face -->
+      <path d="M400 200 Q532 200 540 384 Q543 498 482 588 Q444 640 400 640
+               Q356 640 318 588 Q257 498 260 384 Q268 200 400 200Z" fill="url(#skin)"/>
+      <path d="M400 200 Q532 200 540 384 Q543 498 482 588 Q444 640 400 640
+               Q356 640 318 588 Q257 498 260 384 Q268 200 400 200Z" fill="url(#jaw)"/>
+      <ellipse cx="400" cy="452" rx="150" ry="90" fill="url(#cheek)"/>
+      <path d="M266 268 Q400 240 534 268 L534 348 Q400 320 266 348Z" fill="url(#shade)"/>
+
+      <!-- bangs + widow's peak -->
+      <path d="M400 196 Q310 196 280 272 Q266 306 262 348 Q292 278 334 252
+               Q370 230 400 256 Q430 230 466 252 Q508 278 538 348
+               Q534 306 520 272 Q490 196 400 196Z" fill="#0f1322"/>
+      <path d="M400 218 L368 288 L400 272 L432 288Z" fill="#0f1322"/>
+
+      <!-- ══ EYES ══ lids live INSIDE the clip, so a closed eye is exactly
+           the almond filled with skin — no rectangle edges on the face -->
+      <g class="eye">
+        <clipPath id="clipL"><path d="M292 415 Q338 384 384 415 Q338 446 292 415Z"/></clipPath>
+        <g clip-path="url(#clipL)">
+          <path d="M292 415 Q338 384 384 415 Q338 446 292 415Z" fill="#f0ebe8"/>
+          <g transform="translate(338 415)">
+            <circle class="iris__black" r="21" fill="#161829"/>
+            <g class="iris__sharingan">
+              <circle r="21" fill="#c0121f"/>
+              <g class="tomoe-set" fill="#180508">
+                <g><circle cy="-13" r="3.5"/><path d="M-3-15 Q-9.5-9.5-9-2.5 Q-5.5-9 .5-11Z"/></g>
+                <g transform="rotate(120)"><circle cy="-13" r="3.5"/><path d="M-3-15 Q-9.5-9.5-9-2.5 Q-5.5-9 .5-11Z"/></g>
+                <g transform="rotate(240)"><circle cy="-13" r="3.5"/><path d="M-3-15 Q-9.5-9.5-9-2.5 Q-5.5-9 .5-11Z"/></g>
+              </g>
+              <circle r="3.6" fill="#180508"/>
+              <circle r="21" fill="none" stroke="#5c060c" stroke-width="2.2"/>
+            </g>
+            <g class="iris__mangekyo">
+              <circle r="21" fill="#e6151f"/>
+              <g class="blades" fill="#180508">
+                <path d="M0 0 Q-6-10 0-19 Q6-10 0 0Z"/>
+                <path d="M0 0 Q-6-10 0-19 Q6-10 0 0Z" transform="rotate(120)"/>
+                <path d="M0 0 Q-6-10 0-19 Q6-10 0 0Z" transform="rotate(240)"/>
+              </g>
+              <circle r="4.2" fill="#180508"/>
+              <circle r="21" fill="none" stroke="#5c060c" stroke-width="2.2"/>
+            </g>
+          </g>
+          <!-- the lid: at rest it fills the whole almond -->
+          <path class="lid" d="M286 415 Q338 452 390 415 L390 344 L286 344Z" fill="url(#skin)"/>
+        </g>
+        <path d="M292 415 Q338 384 384 415" stroke="#181322" stroke-width="4.6" fill="none" stroke-linecap="round"/>
+        <path d="M292 415 Q338 446 384 415" stroke="#2c2436" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".65"/>
+      </g>
+
+      <g class="eye">
+        <clipPath id="clipR"><path d="M416 415 Q462 384 508 415 Q462 446 416 415Z"/></clipPath>
+        <g clip-path="url(#clipR)">
+          <path d="M416 415 Q462 384 508 415 Q462 446 416 415Z" fill="#f0ebe8"/>
+          <g transform="translate(462 415)">
+            <circle class="iris__black" r="21" fill="#161829"/>
+            <g class="iris__sharingan">
+              <circle r="21" fill="#c0121f"/>
+              <g class="tomoe-set" fill="#180508">
+                <g><circle cy="-13" r="3.5"/><path d="M-3-15 Q-9.5-9.5-9-2.5 Q-5.5-9 .5-11Z"/></g>
+                <g transform="rotate(120)"><circle cy="-13" r="3.5"/><path d="M-3-15 Q-9.5-9.5-9-2.5 Q-5.5-9 .5-11Z"/></g>
+                <g transform="rotate(240)"><circle cy="-13" r="3.5"/><path d="M-3-15 Q-9.5-9.5-9-2.5 Q-5.5-9 .5-11Z"/></g>
+              </g>
+              <circle r="3.6" fill="#180508"/>
+              <circle r="21" fill="none" stroke="#5c060c" stroke-width="2.2"/>
+            </g>
+            <g class="iris__mangekyo">
+              <circle r="21" fill="#e6151f"/>
+              <g class="blades" fill="#180508">
+                <path d="M0 0 Q-6-10 0-19 Q6-10 0 0Z"/>
+                <path d="M0 0 Q-6-10 0-19 Q6-10 0 0Z" transform="rotate(120)"/>
+                <path d="M0 0 Q-6-10 0-19 Q6-10 0 0Z" transform="rotate(240)"/>
+              </g>
+              <circle r="4.2" fill="#180508"/>
+              <circle r="21" fill="none" stroke="#5c060c" stroke-width="2.2"/>
+            </g>
+          </g>
+          <path class="lid" d="M410 415 Q462 452 514 415 L514 344 L410 344Z" fill="url(#skin)"/>
+        </g>
+        <path d="M416 415 Q462 384 508 415" stroke="#181322" stroke-width="4.6" fill="none" stroke-linecap="round"/>
+        <path d="M416 415 Q462 446 508 415" stroke="#2c2436" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".65"/>
+      </g>
+
+      <!-- brows — thin and angled, above the eyes -->
+      <path d="M298 379 Q336 361 381 373 L380 380 Q338 371 302 387Z" fill="#141829"/>
+      <path d="M502 379 Q464 361 419 373 L420 380 Q462 371 498 387Z" fill="#141829"/>
+
+      <!-- itachi's nasolacrimal creases -->
+      <path d="M330 440 Q322 508 316 562" stroke="#7f7484" stroke-width="3.4" fill="none" stroke-linecap="round" opacity=".75"/>
+      <path d="M470 440 Q478 508 484 562" stroke="#7f7484" stroke-width="3.4" fill="none" stroke-linecap="round" opacity=".75"/>
+
+      <!-- nose + mouth -->
+      <path d="M383 512 Q400 522 417 512" stroke="#8d8291" stroke-width="3" fill="none" stroke-linecap="round" opacity=".6"/>
+      <path d="M370 574 Q400 582 430 574" stroke="#6f6474" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div class="stage__glow"></div>
+</div>
+
+<!-- ═══════════════════ HUD ═══════════════════ -->
+<header class="hud">
+  <a class="brand" href="#hero">
+    <span class="brand__mark" aria-hidden="true"></span>
+    <span class="brand__name">UCHIHA</span>
+    <span class="brand__sub">禁術 · FORBIDDEN ARTS</span>
+  </a>
+  <nav class="nav">
+    <a href="#eyes">EYES</a>
+    <a href="#jutsu">JUTSU</a>
+    <a href="#end">END</a>
+    <button class="nav__audio" id="audioToggle" aria-pressed="false">音 <span>OFF</span></button>
+  </nav>
+</header>
+
+<div class="rail rail--left" aria-hidden="true">暁 · AKATSUKI · 木ノ葉隠れの里</div>
+<div class="rail rail--right" aria-hidden="true">
+  <span class="rail__pct" id="scrollPct">SCROLL 000%</span>
+  <span class="rail__bar"><i id="scrollBar"></i></span>
+</div>
+
+<div class="tag" id="actTag" aria-hidden="true"><b>写輪眼</b><em>SHARINGAN</em></div>
+<div class="frameCount" id="frameCount" aria-hidden="true">眼力 追尾 · FRAME 01</div>
+
+<main>
+
+  <!-- ══════════ ACT I — HERO ══════════ -->
+  <section class="act act--hero" id="hero">
+    <div class="hero__type">
+      <h1 class="hero__jp"><span>うちは</span><em>イタチ</em></h1>
+      <p class="hero__ro">UCHIHA ITACHI</p>
+    </div>
+    <div class="hero__cue">
+      <span class="hero__cue-jp">下へ</span>
+      <span class="hero__cue-line"></span>
+      <span class="hero__cue-ro">SCROLL TO OPEN HIS EYES</span>
+    </div>
+  </section>
+
+  <!-- ══════════ ACT II — 覚醒 ══════════ -->
+  <section class="act act--panel" id="awakening">
+    <div class="panel reveal">
+      <h2 class="panel__jp">覚醒</h2>
+      <p class="panel__ro">AWAKENING</p>
+      <p class="panel__quote">「本当の力は、目を開けた者にしか見えない。」</p>
+      <p class="panel__txt">Real strength is only visible to the one who opens his eyes.</p>
+    </div>
+  </section>
+
+  <!-- ══════════ ACT III — 写輪眼 ══════════ -->
+  <section class="act act--panel" id="sharingan">
+    <div class="panel reveal">
+      <h2 class="panel__jp panel__jp--stack">写輪<br>眼</h2>
+      <p class="panel__ro">SHARINGAN</p>
+      <p class="panel__txt">Three tomoe. Nothing escapes them.</p>
+    </div>
+  </section>
+
+  <!-- ══════════ ACT IV — 烏 ══════════ -->
+  <section class="act act--crow" id="crow">
+    <div class="feathers" aria-hidden="true"></div>
+    <p class="crow__line reveal">一羽の烏が、真実を運ぶ。<em>— a single crow carries the truth.</em></p>
+  </section>
+
+  <!-- ══════════ ACT V — 見つめ返せ / LIVE TRACK ══════════ -->
+  <section class="act act--eyes" id="eyes">
+    <div class="track" id="track">
+      <!-- PLACEHOLDER ART — swap for the 9-frame gaze sprite, see assets/README.md -->
+      <svg class="track__svg" viewBox="0 0 1400 560" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <defs>
+          <filter id="eyeGlow" x="-70%" y="-70%" width="240%" height="240%">
+            <feGaussianBlur stdDeviation="16" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <radialGradient id="socket">
+            <stop offset="0%" stop-color="#1d1424"/><stop offset="100%" stop-color="#05040a" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="sclera" cx="50%" cy="40%" r="70%">
+            <stop offset="0%" stop-color="#f4eff2"/><stop offset="100%" stop-color="#b9aebd"/>
+          </radialGradient>
+        </defs>
+
+        <ellipse cx="360" cy="270" rx="330" ry="215" fill="url(#socket)"/>
+        <ellipse cx="1040" cy="270" rx="330" ry="215" fill="url(#socket)"/>
+
+        <g class="tEye">
+          <clipPath id="tClipL"><path d="M170 272 Q362 146 552 272 Q362 384 170 272Z"/></clipPath>
+          <path d="M170 272 Q362 146 552 272 Q362 384 170 272Z" fill="url(#sclera)"/>
+          <g clip-path="url(#tClipL)"><g transform="translate(362 272)">
+            <g class="tIris" filter="url(#eyeGlow)">
+              <circle r="88" fill="#ff1e28"/>
+              <g class="blades" fill="#12040a">
+                <path d="M0 0 Q-24-44 0-80 Q24-44 0 0Z"/>
+                <path d="M0 0 Q-24-44 0-80 Q24-44 0 0Z" transform="rotate(120)"/>
+                <path d="M0 0 Q-24-44 0-80 Q24-44 0 0Z" transform="rotate(240)"/>
+              </g>
+              <circle r="15" fill="#12040a"/>
+              <circle r="88" fill="none" stroke="#6d060e" stroke-width="6"/>
+              <circle cx="-32" cy="-36" r="12" fill="#fff" opacity=".5"/>
+            </g>
+          </g></g>
+          <path d="M170 272 Q362 146 552 272" stroke="#0c0710" stroke-width="15" fill="none" stroke-linecap="round"/>
+          <path d="M170 272 Q362 384 552 272" stroke="#0c0710" stroke-width="8"  fill="none" stroke-linecap="round"/>
+        </g>
+
+        <g class="tEye">
+          <clipPath id="tClipR"><path d="M848 272 Q1038 146 1230 272 Q1038 384 848 272Z"/></clipPath>
+          <path d="M848 272 Q1038 146 1230 272 Q1038 384 848 272Z" fill="url(#sclera)"/>
+          <g clip-path="url(#tClipR)"><g transform="translate(1038 272)">
+            <g class="tIris" filter="url(#eyeGlow)">
+              <circle r="88" fill="#ff1e28"/>
+              <g class="blades" fill="#12040a">
+                <path d="M0 0 Q-24-44 0-80 Q24-44 0 0Z"/>
+                <path d="M0 0 Q-24-44 0-80 Q24-44 0 0Z" transform="rotate(120)"/>
+                <path d="M0 0 Q-24-44 0-80 Q24-44 0 0Z" transform="rotate(240)"/>
+              </g>
+              <circle r="15" fill="#12040a"/>
+              <circle r="88" fill="none" stroke="#6d060e" stroke-width="6"/>
+              <circle cx="-32" cy="-36" r="12" fill="#fff" opacity=".5"/>
+            </g>
+          </g></g>
+          <path d="M848 272 Q1038 146 1230 272" stroke="#0c0710" stroke-width="15" fill="none" stroke-linecap="round"/>
+          <path d="M848 272 Q1038 384 1230 272" stroke="#0c0710" stroke-width="8"  fill="none" stroke-linecap="round"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="eyes__type">
+      <h2 class="eyes__jp">見つめ<em>返せ</em></h2>
+      <p class="eyes__lead">彼はあなたを見ている。 <span>— Wherever you move, he follows.</span></p>
+      <p class="eyes__meta">眼力追尾 · nine measured gaze positions, mapped left to right</p>
+      <p class="eyes__hint">動かせ · MOVE YOUR CURSOR</p>
+    </div>
+  </section>
+
+  <!-- ══════════ ACT VI — 其の眼に宿る術 ══════════ -->
+  <section class="act act--jutsu" id="jutsu">
+    <div class="jutsu__bg" aria-hidden="true"></div>
+    <!-- PLACEHOLDER ART — a real cut-out figure belongs here -->
+    <svg class="jutsu__figure" viewBox="0 0 420 620" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
+      <defs><linearGradient id="fig" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#ff2b2b" stop-opacity=".20"/>
+        <stop offset="70%" stop-color="#78060c" stop-opacity=".10"/>
+        <stop offset="100%" stop-color="#78060c" stop-opacity="0"/>
+      </linearGradient></defs>
+      <path d="M210 60 Q150 60 146 150 Q146 210 176 246 L150 268 Q60 300 44 620 L376 620 Q360 300 270 268 L244 246 Q274 210 274 150 Q270 60 210 60Z" fill="url(#fig)"/>
+      <circle cx="186" cy="150" r="13" fill="#ff2b2b" opacity=".5"/>
+      <circle cx="234" cy="150" r="13" fill="#ff2b2b" opacity=".5"/>
+    </svg>
+
+    <div class="jutsu__inner">
+      <h2 class="jutsu__jp reveal">其の眼に<br>宿る術</h2>
+      <p class="jutsu__txt reveal">The techniques that lived behind those eyes — and the price each one demanded.
+        He never used a single one of them for himself.</p>
+
+      <div class="jutsu__cats reveal" role="group" aria-label="Technique categories">
+        <button class="cat" data-set="kekkei" aria-haspopup="dialog"><b>血継限界</b><em>KEKKEI GENKAI</em></button>
+        <button class="cat" data-set="infil"  aria-haspopup="dialog"><b>戦・潜入</b><em>INFILTRATION</em></button>
+        <button class="cat" data-set="four"   aria-haspopup="dialog"><b>四つの術</b><em>FOUR ARTS</em></button>
+      </div>
+
+      <p class="jutsu__cue reveal">動かせ · burn the dark away</p>
+      <p class="jutsu__quote reveal">「命を隠して、里を守る。」</p>
+
+      <div class="jutsu__foot">
+        <span>其の眼に宿る術</span>
+        <span>ACT VI / OCULAR ARTS</span>
+      </div>
+    </div>
+
+    <div class="jutsu__amaterasu" aria-hidden="true">
+      <p class="jutsu__amaterasu-sub">TO PROTECT THE VILLAGE, HE GAVE UP BEING LOVED BY IT</p>
+      <p class="jutsu__amaterasu-jp">天照</p>
+      <p class="jutsu__amaterasu-ro">AMATERASU</p>
+    </div>
+  </section>
+
+  <!-- ══════════ ACT VII — QUOTE ══════════ -->
+  <section class="act act--quote" id="quote">
+    <blockquote class="reveal">
+      <p class="quote__jp">許せ、サスケ。<span class="dots">これで</span>最後だ。</p>
+      <p class="quote__ro">“Forgive me, Sasuke. This is the last time.”</p>
+      <cite>うちはイタチ · UCHIHA ITACHI</cite>
+    </blockquote>
+  </section>
+
+  <!-- ══════════ ACT VIII — END ══════════ -->
+  <section class="act act--end" id="end">
+    <div class="end__inner reveal">
+      <p class="end__jp">終</p>
+      <p class="end__line">木ノ葉の名の下に。</p>
+      <p class="end__ro">UNDER THE NAME OF THE LEAF</p>
+      <div class="end__foot">
+        <span>PLACEHOLDER ART · SWAP IN <code>assets/</code></span>
+        <span>暁 · AKATSUKI</span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════════ JUTSU CARD OVERLAY ═══════════════════ -->
+<div class="cards" id="cards" role="dialog" aria-modal="true" aria-labelledby="cardsJp" hidden>
+  <button class="cards__close" id="cardsClose" aria-label="Close techniques">&times;</button>
+  <div class="cards__head">
+    <p class="cards__jp" id="cardsJp">血継限界</p>
+    <p class="cards__ro" id="cardsRo">KEKKEI GENKAI</p>
+  </div>
+  <div class="cards__grid" id="cardsGrid"></div>
+</div>
+
+<script src="main.js"></script>
+</body>
+</html>
